@@ -2,6 +2,9 @@ import json
 from pathlib import Path
 import pandas as pd
 import numpy as np
+from app.db.session import SessionLocal
+from app.db.models.weather import WeatherData
+
 
 RAW_DATA_DIR = Path("data/raw/weather")
 PROCESSED_DATA_DIR = Path("data/processed/weather")
@@ -48,15 +51,47 @@ def save_processed_data(df: pd.DataFrame, source_file: Path) -> Path:
     return output_path
 
 
+
+    
+def save_to_database(df):
+    session = SessionLocal()
+    
+    try:
+        for _, row in df.iterrows():
+            weather_entry = WeatherData(
+                time=row["time"],
+                temperature=row["temperature"],
+                temperature_c=(row["temperature"]),
+                temp_above_avg=row["temp_above_avg"]
+            )
+            session.add(weather_entry)
+        session.commit()
+        
+    except Exception as e:
+        session.rollback()
+        raise e 
+    
+    finally:
+        session.close()
+        
 def run():
     raw_file = get_latest_raw_data()
     print(f"Loading raw data from {raw_file}")
-    
+
     df_raw = load_raw_weather_data(raw_file)
     df_processed = process_weather_data(df_raw)
+
+    output = save_processed_data(df_processed, raw_file)
+    print(f"Saved processed data to {output}")
+
+    save_to_database(df_processed)
+    print("Data saved to database")
+
+
     
-    output_file = save_processed_data(df_processed, raw_file)
-    print(f"Saved processed data to {output_file}")
+
     
 if __name__ == "__main__":
+    
     run()
+        
