@@ -4,7 +4,6 @@ from app.processing.weather_processing import process_weather_data
 def test_process_weather_data():
     df = pd.DataFrame({
         "temperature": [10, 20, 30],
-        "temperature_c": [10.0, 20.0, 30.0],
     })
 
     result = process_weather_data(df)

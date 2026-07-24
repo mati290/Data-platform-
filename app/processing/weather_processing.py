@@ -61,7 +61,6 @@ def save_to_database(df):
             weather_entry = WeatherData(
                 time=row["time"],
                 temperature=row["temperature"],
-                temperature_c=(row["temperature"]),
                 temp_above_avg=row["temp_above_avg"]
             )
             session.add(weather_entry)

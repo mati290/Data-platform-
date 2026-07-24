@@ -9,8 +9,9 @@ def weather_pipeline_job():
     run_processing()
     print("Weather data pipeline work completed.")
     
-def start_scheduler():
+def start_scheduler() -> BackgroundScheduler:
     scheduler = BackgroundScheduler()
     scheduler.add_job(weather_pipeline_job, 'interval', minutes=60, id='weather_pipeline_job', replace_existing=True)
     scheduler.start()
     print("Weather scheduler started, running every hour.")
+    return scheduler

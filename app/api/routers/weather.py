@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from app.db.session import SessionLocal
+from app.db.session import get_db
 from app.db.models.weather import WeatherData
 
 
@@ -11,13 +11,7 @@ router = APIRouter(
     tags=["weather"],
 )
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-        
+
 @router.get("/latest")
 def get_latest_weather(db: Session = Depends(get_db)):
     record = db.query(WeatherData).order_by(WeatherData.time.desc()).first()

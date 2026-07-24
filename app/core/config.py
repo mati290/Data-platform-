@@ -6,5 +6,6 @@ load_dotenv()
 class Settings :
     APP_NAME: str = os.getenv("APP_NAME", "Data Platform")
     ENV: str = os.getenv("ENV", "dev")
-    
+    ENABLE_SCHEDULER: bool = os.getenv("ENABLE_SCHEDULER", "true").lower() == "true"
+
 settings = Settings()
