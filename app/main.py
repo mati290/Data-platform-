@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from app.core.config import settings
 from app.core.logging import logger
 from app.api.routers.weather import router as weather_router
-from app.sheduler.weather_sheduler import start_scheduler
+from app.scheduler.weather_scheduler import start_scheduler
 
 
 
@@ -18,4 +18,11 @@ def health_check():
 
 @app.on_event("startup")
 def on_startup():
-    start_scheduler()
+    if settings.ENABLE_SCHEDULER:
+        app.state.scheduler = start_scheduler()
+
+@app.on_event("shutdown")
+def on_shutdown():
+    scheduler = getattr(app.state, "scheduler", None)
+    if scheduler:
+        scheduler.shutdown(wait=False)

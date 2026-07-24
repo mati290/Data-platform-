@@ -1,14 +1,16 @@
+import os
+
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+os.environ.setdefault("DATABASE_URL", SQLALCHEMY_DATABASE_URL)
+os.environ.setdefault("ENABLE_SCHEDULER", "false")
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.main import app
-from app.db.session import Base
-from app.db.session import get_db  # UWAGA: zaraz dodamy
-
-
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+from app.db.session import Base, get_db
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,

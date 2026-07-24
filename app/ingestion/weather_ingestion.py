@@ -5,14 +5,14 @@ from pathlib import Path
 
 BASE_URL = "https://api.open-meteo.com/v1/forecast"
 
-PARMS = {
+PARAMS = {
     "latitude": 52.23,
     "longitude": 21.01,
     "hourly": "temperature_2m",
 }
 
-def fetch_weather_data(parms=PARMS):
-    response = requests.get(BASE_URL, params=parms, timeout=10)
+def fetch_weather_data(params=PARAMS):
+    response = requests.get(BASE_URL, params=params, timeout=10)
     response.raise_for_status()
     return response.json()
 
